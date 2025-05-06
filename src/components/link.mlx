@@ -1,0 +1,4 @@
+module Link = struct
+  let[@react.component] make ~href ?(children = React.string "") () =
+    <a href target="_BLANK" rel="noopener"> children </a>;
+end

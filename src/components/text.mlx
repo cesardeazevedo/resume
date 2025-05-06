@@ -1,0 +1,48 @@
+module Text = struct
+  type variant =
+    | Display
+    | Headline
+    | Title
+    | Body
+    | Label
+
+  type size =
+    | Lg
+    | Md
+    | Sm
+
+  let get_variant_classes (variant, size) =
+    match variant, size with
+    | Display, Lg -> "text-[57px] leading-[64px] font-normal tracking-[-0.25px]"
+    | Display, Md -> "text-[45px] leading-[52px] font-normal tracking-[0px]"
+    | Display, Sm -> "text-[36px] leading-[44px] font-normal tracking-[0px]"
+    | Headline, Lg -> "text-[32px] leading-[40px] font-normal"
+    | Headline, Md -> "text-[28px] leading-[36px] font-normal"
+    | Headline, Sm -> "text-[24px] leading-[32px] font-normal"
+    | Title, Lg -> "text-[20px] leading-[28px] font-normal"
+    | Title, Md -> "text-[18px] leading-[24px] font-medium tracking-[0.15px]"
+    | Title, Sm -> "text-[14px] leading-[20px] font-medium tracking-[0.1px]"
+    | Body, Lg -> "text-[18px] leading-[24px] font-normal"
+    | Body, Md -> "text-[16px] leading-[20px] font-normal"
+    | Body, Sm -> "text-[14px] leading-[16px] font-normal"
+    | Label, Lg -> "text-[14px] leading-[20px] font-medium"
+    | Label, Md -> "text-[12px] leading-[16px] font-medium"
+    | Label, Sm -> "text-[11px] leading-[12px] font-medium"
+
+  let[@react.component] make ?(variant = Body) ?(size = Md) ?(className = "") ~children ()
+      =
+    let t = variant, size in
+    let variant_cn = get_variant_classes t in
+    let className = String.concat " " [ variant_cn; className ] in
+    match variant, size with
+    | Display, Lg -> <h1 className>children</h1>
+    | Display, Md -> <h2 className>children</h2>
+    | Display, Sm -> <h3 className>children</h3>
+    | Headline, Lg -> <h1 className>children</h1>
+    | Headline, Md -> <h3 className>children</h3>
+    | Headline, Sm -> <h3 className>children</h3>
+    | Title, Lg -> <h4 className>children</h4>
+    | Title, Md -> <h5 className>children</h5>
+    | Title, Sm -> <h6 className>children</h6>
+    | _ -> <span className>children</span>
+end

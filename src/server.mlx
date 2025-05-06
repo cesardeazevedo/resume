@@ -1,0 +1,18 @@
+open Layout
+open Index
+
+let () =
+  Dream.run
+  @@ Dream.logger
+  @@ Dream.router
+       [
+         Dream.get "/" (fun _ ->
+             match Parsexp_io.load (module Parsexp.Many) ~filename:"resume.sexp" with
+             | Ok sexps ->
+               let doc = Resume.resume_of_sexp sexps in
+               Dream.html
+                 (ReactDOM.renderToString
+                    <Layout title=(doc.name ^ " resume")><IndexRoute doc /></Layout>)
+             | Error ex -> Dream.html (Parsexp.Parse_error.message ex));
+         Dream.get "/assets/**" (Dream.static "src/assets");
+       ]

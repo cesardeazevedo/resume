@@ -1,0 +1,45 @@
+open Text
+open Link
+open Stack
+open Resume
+open Container
+open Sections
+
+module IndexRoute = struct
+  let[@react.component] make ~(doc : Resume.doc) =
+    <Container>
+      <Stack horizontal=false gap=2 align=`Stretch>
+        <Stack horizontal=true justify=`SpaceBetween align=`FlexEnd>
+          <Stack horizontal=false>
+            <Text variant=Text.Headline size=Text.Md className="font-serif">
+              (React.string doc.name)
+            </Text>
+            <Text>
+              <Link href=("mailto:" ^ doc.email)>(React.string doc.email)</Link>
+            </Text>
+            <Text>(React.string (Option.value doc.location ~default:""))</Text>
+          </Stack>
+          <Stack horizontal=false
+                 align=`FlexEnd
+                 justify=`SpaceBetween
+                 className="text-right">
+            (Option.value doc.links ~default:[]
+            |> List.map (fun href ->
+                   <Link key=href href>
+                     (React.string (Str.replace_first (Str.regexp "https://") "" href))
+                   </Link>)
+            |> React.list)
+          </Stack>
+        </Stack>
+        <br />
+        <SectionString name="Summary" content=doc.summary />
+        <SectionItemList name="Experience" items=doc.experience />
+        <SectionItemList name="Education" items=doc.education />
+        <SectionItemList name="Projects" items=doc.projects />
+        <SectionStringList name="Skills" items=doc.skills />
+        <SectionStringList name="Interests" items=doc.interests />
+        <SectionStringList name="Learning" items=doc.learning />
+        <SectionStringList name="Languages" items=doc.languages />
+      </Stack>
+    </Container>
+end

@@ -1,0 +1,4 @@
+module Container = struct
+  let[@react.component] make ?(children = React.string "") () =
+    <div className="mx-auto max-w-screen-xl">children</div>
+end

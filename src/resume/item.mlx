@@ -1,0 +1,39 @@
+open Stack
+open Text
+open Link
+
+module Item = struct
+  let[@react.component] make ~(item : Resume.item) =
+    <Stack key=item.name horizontal=false gap=1 grow=true className="w-full">
+      <Stack horizontal=true justify=`SpaceBetween className="w-full">
+        <Stack horizontal=false grow=true>
+          <Text variant=Text.Title size=Text.Md>
+            (match item.link with
+            | Some href -> <Link href><strong>(React.string item.name)</strong></Link>
+            | None -> <strong>(React.string item.name)</strong>)
+          </Text>
+          (match item.role with
+          | Some role -> <Text variant=Text.Title size=Text.Sm>(React.string role)</Text>
+          | None -> React.null)
+        </Stack>
+        <Text variant=Text.Title size=Text.Sm className="opacity-70">
+          <strong>
+            <Stack horizontal=false align=`FlexEnd>
+              <div>(React.string (Option.value item.date ~default:""))</div>
+              (React.string (Option.value item.location ~default:""))
+            </Stack>
+          </strong>
+        </Text>
+      </Stack>
+      <Stack horizontal=false gap=1>
+        (match item.description with
+        | Some desc -> <Text>(React.InnerHtml desc)</Text>
+        | None -> React.null)
+        <ul className="list-outside list-disc ml-4">
+          (Option.value item.notes ~default:[]
+          |> List.map (fun note -> <li key=note><Text>(React.InnerHtml note)</Text></li>)
+          |> React.list)
+        </ul>
+      </Stack>
+    </Stack>
+end

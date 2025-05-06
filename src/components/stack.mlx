@@ -1,0 +1,67 @@
+module Stack = struct
+  type align =
+    [ `Center
+    | `FlexStart
+    | `FlexEnd
+    | `Stretch
+    ]
+
+  type justify =
+    [ align
+    | `SpaceBetween
+    | `SpaceAround
+    | `SpaceEvenly
+    ]
+
+  let get_align_classes = function
+    | `Center -> "items-center"
+    | `FlexStart -> "items-start"
+    | `FlexEnd -> "items-end"
+    | `Stretch -> "items-stretch"
+
+  let get_justify_classes = function
+    | `Center -> "justify-center"
+    | `FlexStart -> "justify-start"
+    | `FlexEnd -> "justify-end"
+    | `Stretch -> "justify-stretch"
+    | `SpaceBetween -> "justify-between"
+    | `SpaceAround -> "justify-around"
+    | `SpaceEvenly -> "justify-evenly"
+
+  let get_direction_classes = function
+    | true -> "flex-row"
+    | false -> "flex-col"
+
+  let get_wrap_classes = function
+    | true -> "flex-wrap"
+    | false -> "flex-nowrap"
+
+  let get_grow_classes = function
+    | true -> "grow"
+    | false -> ""
+
+  let[@react.component] make
+      ?(children = React.string "")
+      ?(horizontal = true)
+      ?(align = `FlexStart)
+      ?(justify = `FlexStart)
+      ?(gap = 0)
+      ?(wrap = false)
+      ?(grow = false)
+      ?(className = "")
+      () =
+    let align_cn = get_align_classes align in
+    let justify_cn = get_justify_classes justify in
+    let wrap_cn = get_wrap_classes wrap in
+    let direction_cn = get_direction_classes horizontal in
+    let grow_cn = get_grow_classes grow in
+    let gap_cn = "gap-" ^ string_of_int gap in
+    let cn =
+      String.concat
+        " "
+        [
+          "flex"; direction_cn; align_cn; justify_cn; wrap_cn; grow_cn; gap_cn; className;
+        ]
+    in
+    <div className=cn>children</div>
+end

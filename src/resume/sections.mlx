@@ -1,0 +1,53 @@
+open Stack
+open Text
+open Item
+
+module SectionTitle = struct
+  let[@react.component] make ~(name : string) =
+    <Text variant=Text.Title size=Text.Md className="w-34 font-serif">
+      (React.string name)
+    </Text>
+end
+
+module SectionItemList = struct
+  let[@react.component] make ~(name : string) ~(items : Resume.item list option) =
+    match items with
+    | Some items ->
+      <Stack horizontal=true align=`FlexStart justify=`SpaceBetween>
+        <SectionTitle name />
+        <Stack grow=true horizontal=false align=`FlexStart gap=2 className="flex-1">
+          (items
+          |> List.map (fun (item : Resume.item) -> <Item key=item.name item />)
+          |> React.list)
+        </Stack>
+      </Stack>
+    | None -> React.null
+end
+
+module SectionStringList = struct
+  let[@react.component] make ~(name : string) ~(items : string list option) =
+    match items with
+    | Some items ->
+      <Stack horizontal=true align=`FlexStart justify=`SpaceBetween>
+        <SectionTitle name />
+        <Stack grow=true horizontal=false align=`FlexStart gap=2 className="flex-1">
+          <ul className="list-disc ml-4 capitalize">
+            <li>(React.string (String.concat ", " items))</li>
+          </ul>
+        </Stack>
+      </Stack>
+    | None -> React.null
+end
+
+module SectionString = struct
+  let[@react.component] make ~(name : string) ~(content : string option) =
+    match content with
+    | Some content ->
+      <Stack horizontal=true align=`FlexStart justify=`SpaceBetween>
+        <SectionTitle name />
+        <Stack grow=true horizontal=false align=`FlexStart gap=2 className="flex-1">
+          (React.string content)
+        </Stack>
+      </Stack>
+    | None -> React.null
+end
